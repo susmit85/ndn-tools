@@ -68,6 +68,8 @@ main(int argc, char* argv[])
                     "maximum number of retries in case of Nack or timeout (-1 = no limit)")
     ("no-version-discovery,D", po::bool_switch(&options.disableVersionDiscovery),
                     "skip version discovery, even if the supplied name does not end with a version component")
+    ("typed-encoding,T", po::bool_switch(&options.enableTypedNameComponent),
+                    "use typed name component for segment number")
     ("quiet,q",     po::bool_switch(&options.isQuiet), "suppress all diagnostic output, except fatal errors")
     ("verbose,v",   po::bool_switch(&options.isVerbose), "turn on verbose output (per segment information")
     ("version,V",   "print program version and exit")
@@ -162,6 +164,11 @@ main(int argc, char* argv[])
     std::cerr << "Usage: " << programName << " [options] ndn:/name" << std::endl;
     std::cerr << visibleDesc;
     return 2;
+  }
+
+
+  if (options.enableTypedNameComponent) {
+     name::setConventionEncoding(name::Convention::TYPED);
   }
 
   if (options.maxPipelineSize < 1 || options.maxPipelineSize > 1024) {
